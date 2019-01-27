@@ -41,5 +41,8 @@ func main() {
 		}
 	})
 
+	// Delete expired session files
+	session.Clean("./tmp")
+
 	http.ListenAndServe(":8080", nil)
 }

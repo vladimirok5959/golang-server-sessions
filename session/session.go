@@ -52,7 +52,7 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *session {
 			Name:     "session",
 			Value:    sess.i,
 			Path:     "/",
-			Expires:  time.Now().Add(365 * 24 * time.Hour),
+			Expires:  time.Now().Add(7 * 24 * time.Hour),
 			HttpOnly: true,
 		})
 	}
