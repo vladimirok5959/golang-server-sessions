@@ -63,7 +63,6 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 		Int:    map[string]int{},
 		String: map[string]string{},
 	}
-	sess.c = true
 
 	return &sess
 }
