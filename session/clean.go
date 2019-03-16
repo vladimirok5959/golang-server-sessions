@@ -12,7 +12,7 @@ func Clean(tmpdir string) error {
 		return err
 	}
 	now := time.Now()
-	exp := 7 * 24 * time.Hour
+	exp := 24 * time.Hour
 	for _, file := range files {
 		if len(file.Name()) == 40 {
 			if diff := now.Sub(file.ModTime()); diff > exp {
