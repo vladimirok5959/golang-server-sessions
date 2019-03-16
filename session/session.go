@@ -43,8 +43,8 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 
 			// Update file last modify time if needs
 			if info, err := os.Stat(sess.d + string(os.PathSeparator) + sess.i); err == nil {
-				if time.Now().Sub(info.ModTime()) > 30 * time.Minute {
-					_ = os.Chtimes(sess.d + string(os.PathSeparator) + sess.i, time.Now(), time.Now())
+				if time.Now().Sub(info.ModTime()) > 30*time.Minute {
+					_ = os.Chtimes(sess.d+string(os.PathSeparator)+sess.i, time.Now(), time.Now())
 				}
 			}
 		}
