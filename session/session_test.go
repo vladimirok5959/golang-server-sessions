@@ -257,7 +257,7 @@ func TestSessionDestroy(t *testing.T) {
 		sess := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/set" {
-			sess.SetBool("some_bool", true)
+			sess.SetInt("some_var", 1)
 			w.Write([]byte(`ok`))
 		} else {
 			w.WriteHeader(http.StatusNotFound)
@@ -288,13 +288,13 @@ func TestSessionDestroy(t *testing.T) {
 		sess := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/get" {
-			w.Write([]byte(fmt.Sprintf("%v", sess.GetBool("some_bool", false))))
+			w.Write([]byte(fmt.Sprintf("%v", sess.GetInt("some_var", 0))))
 		} else {
 			w.WriteHeader(http.StatusNotFound)
 			w.Write([]byte(`404`))
 		}
 	}).ServeHTTP(recorder, request)
-	if recorder.Body.String() != "true" {
+	if recorder.Body.String() != "1" {
 		t.Fatalf("bad body response, not match")
 	}
 
@@ -309,6 +309,7 @@ func TestSessionDestroy(t *testing.T) {
 		sess := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/get" {
+			sess.SetInt("some_var", 2)
 			err := sess.Destroy()
 			if err == nil {
 				w.Write([]byte(`OK`))
