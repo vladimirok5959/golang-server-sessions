@@ -245,3 +245,90 @@ func TestSessionDoNotCreateSessionFileForDefValues(t *testing.T) {
 		t.Fatalf("session file in tmp folder do not must exists")
 	}
 }
+
+func TestSessionDestroy(t *testing.T) {
+	// Set value
+	request, err := http.NewRequest("GET", "/set", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	recorder := httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/set" {
+			sess.SetBool("some_bool", true)
+			w.Write([]byte(`ok`))
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			w.Write([]byte(`404`))
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "ok" {
+		t.Fatalf("bad body response, not match")
+	}
+
+	// Remember session id
+	var sessId string
+	if len(recorder.Result().Cookies()) > 0 {
+		sessId = recorder.Result().Cookies()[0].Value
+	}
+	if sessId == "" {
+		t.Fatalf("session identifier is not defined")
+	}
+
+	// Get value
+	request, err = http.NewRequest("GET", "/get", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Cookie", "session="+sessId)
+	recorder = httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/get" {
+			w.Write([]byte(fmt.Sprintf("%v", sess.GetBool("some_bool", false))))
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			w.Write([]byte(`404`))
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "true" {
+		t.Fatalf("bad body response, not match")
+	}
+
+	// Check destroy
+	request, err = http.NewRequest("GET", "/get", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Cookie", "session="+sessId)
+	recorder = httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/get" {
+			err := sess.Destroy()
+			if err == nil {
+				w.Write([]byte(`OK`))
+			} else {
+				w.Write([]byte(`ERROR`))
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			w.Write([]byte(`404`))
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "OK" {
+		t.Fatalf("bad body response, not match")
+	}
+
+	// Check session file
+	fname := "./../tmp" + string(os.PathSeparator) + sessId
+	_, err = ioutil.ReadFile(fname)
+	if err == nil {
+		_ = os.Remove(fname)
+		t.Fatalf("session file in tmp folder do not must exists")
+	}
+}

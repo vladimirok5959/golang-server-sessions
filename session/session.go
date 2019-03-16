@@ -95,3 +95,10 @@ func (this *Session) Close() bool {
 
 	return false
 }
+
+func (this *Session) Destroy() error {
+	if this.d == "" || this.i == "" {
+		return nil
+	}
+	return os.Remove(this.d + string(os.PathSeparator) + this.i)
+}
