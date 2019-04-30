@@ -7,8 +7,8 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
-	"time"
 	"strings"
+	"time"
 )
 
 type vars struct {
