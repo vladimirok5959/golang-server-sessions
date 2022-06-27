@@ -50,19 +50,15 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 		// Load from file
 		s.hash = cookie.Value
 		fname := strings.Join([]string{s.tmpdir, s.hash}, string(os.PathSeparator))
-		f, err := os.Open(fname)
-		if err == nil {
+		if f, err := os.Open(fname); err == nil {
 			defer f.Close()
 			dec := json.NewDecoder(f)
-			err = dec.Decode(&s.varlist)
-			if err == nil {
-				return &s
-			}
-
-			// Update file last modify time
-			if info, err := os.Stat(fname); err == nil {
-				if time.Since(info.ModTime()) > 30*time.Minute {
-					_ = os.Chtimes(fname, time.Now(), time.Now())
+			if err := dec.Decode(&s.varlist); err == nil {
+				// Update file last modify time
+				if info, err := os.Stat(fname); err == nil {
+					if time.Since(info.ModTime()) > 30*time.Minute {
+						_ = os.Chtimes(fname, time.Now(), time.Now())
+					}
 				}
 			}
 		}
