@@ -34,7 +34,7 @@ func TestSessionBool(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "false" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Set value
@@ -59,7 +59,7 @@ func TestSessionBool(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "ok" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Remember session id
@@ -89,7 +89,7 @@ func TestSessionBool(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "true" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Is set (true)
@@ -114,7 +114,7 @@ func TestSessionBool(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "true" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Del
@@ -140,7 +140,7 @@ func TestSessionBool(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "false" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 }
 
@@ -167,7 +167,7 @@ func TestSessionInt(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "false" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Set value
@@ -193,7 +193,7 @@ func TestSessionInt(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "ok" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Remember session id
@@ -223,7 +223,7 @@ func TestSessionInt(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "5" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Is set (true)
@@ -248,7 +248,7 @@ func TestSessionInt(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "true" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Del
@@ -274,7 +274,7 @@ func TestSessionInt(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "false" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 }
 
@@ -301,7 +301,7 @@ func TestSessionInt64(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "false" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Set value
@@ -327,7 +327,7 @@ func TestSessionInt64(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "ok" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Remember session id
@@ -357,7 +357,7 @@ func TestSessionInt64(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "10" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Is set (true)
@@ -382,7 +382,7 @@ func TestSessionInt64(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "true" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Del
@@ -408,7 +408,7 @@ func TestSessionInt64(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "false" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 }
 
@@ -435,7 +435,7 @@ func TestSessionString(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "false" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Set value
@@ -461,7 +461,7 @@ func TestSessionString(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "ok" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Remember session id
@@ -491,7 +491,7 @@ func TestSessionString(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "test" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Is set (true)
@@ -516,7 +516,7 @@ func TestSessionString(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "true" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Del
@@ -542,7 +542,7 @@ func TestSessionString(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "false" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 }
 
@@ -590,7 +590,7 @@ func TestSessionDoNotCreateSessionFileForDefValues(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "ok" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Remember session id
@@ -599,7 +599,7 @@ func TestSessionDoNotCreateSessionFileForDefValues(t *testing.T) {
 		sessId = recorder.Result().Cookies()[0].Value
 	}
 	if sessId == "" {
-		t.Fatalf("session identifier is not defined")
+		t.Fatal("session identifier is not defined")
 	}
 
 	// Get value
@@ -630,7 +630,7 @@ func TestSessionDoNotCreateSessionFileForDefValues(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "(false)(0)(0)()" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Check session file
@@ -638,7 +638,7 @@ func TestSessionDoNotCreateSessionFileForDefValues(t *testing.T) {
 	_, err = ioutil.ReadFile(fname)
 	if err == nil {
 		_ = os.Remove(fname)
-		t.Fatalf("session file in tmp folder do not must exists")
+		t.Fatal("session file in tmp folder do not must exists")
 	}
 }
 
@@ -665,7 +665,7 @@ func TestSessionDestroy(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "ok" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Remember session id
@@ -674,7 +674,7 @@ func TestSessionDestroy(t *testing.T) {
 		sessId = recorder.Result().Cookies()[0].Value
 	}
 	if sessId == "" {
-		t.Fatalf("session identifier is not defined")
+		t.Fatal("session identifier is not defined")
 	}
 
 	// Get value
@@ -699,7 +699,7 @@ func TestSessionDestroy(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "1" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Check destroy
@@ -732,7 +732,7 @@ func TestSessionDestroy(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "OK" {
-		t.Fatalf("bad body response, not match")
+		t.Fatal("bad body response, not match")
 	}
 
 	// Check session file
@@ -740,6 +740,6 @@ func TestSessionDestroy(t *testing.T) {
 	_, err = ioutil.ReadFile(fname)
 	if err == nil {
 		_ = os.Remove(fname)
-		t.Fatalf("session file in tmp folder do not must exists")
+		t.Fatal("session file in tmp folder do not must exists")
 	}
 }
