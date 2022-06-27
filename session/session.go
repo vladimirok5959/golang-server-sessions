@@ -32,10 +32,15 @@ type Session struct {
 // New to create new session
 func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 	s := Session{
-		w:       w,
-		r:       r,
-		tmpdir:  tmpdir,
-		varlist: &vars{},
+		w:      w,
+		r:      r,
+		tmpdir: tmpdir,
+		varlist: &vars{
+			Bool:   map[string]bool{},
+			Int:    map[string]int{},
+			Int64:  map[string]int64{},
+			String: map[string]string{},
+		},
 		changed: false,
 		hash:    "",
 	}
@@ -54,7 +59,7 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 				return &s
 			}
 
-			// Update file last modify time if needs
+			// Update file last modify time
 			if info, err := os.Stat(fname); err == nil {
 				if time.Since(info.ModTime()) > 30*time.Minute {
 					_ = os.Chtimes(fname, time.Now(), time.Now())
@@ -83,14 +88,6 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 			Expires:  time.Now().Add(7 * 24 * time.Hour),
 			HttpOnly: true,
 		})
-	}
-
-	// Init empty
-	s.varlist = &vars{
-		Bool:   map[string]bool{},
-		Int:    map[string]int{},
-		Int64:  map[string]int64{},
-		String: map[string]string{},
 	}
 
 	return &s
