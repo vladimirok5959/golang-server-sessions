@@ -1,11 +1,14 @@
 # golang-server-sessions
+
 Sessions for http server based on files and cookies
 
 ## How to use
-```
+
+```sh
 go get github.com/vladimirok5959/golang-server-sessions
 ```
-```
+
+```go
 package main
 
 import (
