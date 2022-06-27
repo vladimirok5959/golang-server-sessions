@@ -27,7 +27,7 @@ type Session struct {
 }
 
 func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
-	sess := Session{
+	s := Session{
 		w:       w,
 		r:       r,
 		tmpdir:  tmpdir,
@@ -39,15 +39,15 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 	cookie, err := r.Cookie("session")
 	if err == nil && len(cookie.Value) == 40 {
 		// Load from file
-		sess.hash = cookie.Value
-		fname := strings.Join([]string{sess.tmpdir, sess.hash}, string(os.PathSeparator))
+		s.hash = cookie.Value
+		fname := strings.Join([]string{s.tmpdir, s.hash}, string(os.PathSeparator))
 		f, err := os.Open(fname)
 		if err == nil {
 			defer f.Close()
 			dec := json.NewDecoder(f)
-			err = dec.Decode(&sess.varlist)
+			err = dec.Decode(&s.varlist)
 			if err == nil {
-				return &sess
+				return &s
 			}
 
 			// Update file last modify time if needs
@@ -70,11 +70,11 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 		}
 
 		sign := rRemoteAddr + r.Header.Get("User-Agent") + fmt.Sprintf("%d", int64(time.Now().Unix())) + fmt.Sprintf("%d", int64(rand.Intn(9999999-99)+99))
-		sess.hash = fmt.Sprintf("%x", sha1.Sum([]byte(sign)))
+		s.hash = fmt.Sprintf("%x", sha1.Sum([]byte(sign)))
 
 		http.SetCookie(w, &http.Cookie{
 			Name:     "session",
-			Value:    sess.hash,
+			Value:    s.hash,
 			Path:     "/",
 			Expires:  time.Now().Add(7 * 24 * time.Hour),
 			HttpOnly: true,
@@ -82,13 +82,13 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 	}
 
 	// Init empty
-	sess.varlist = &vars{
+	s.varlist = &vars{
 		Bool:   map[string]bool{},
 		Int:    map[string]int{},
 		String: map[string]string{},
 	}
 
-	return &sess
+	return &s
 }
 
 func (s *Session) Close() bool {
