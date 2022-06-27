@@ -31,13 +31,17 @@ func main() {
 
 			w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 			w.Header().Set("Content-Type", "text/html")
-			w.Write([]byte(`
+			if _, err := w.Write([]byte(`
 				<div>Hello World!</div>
 				<div>Counter: ` + fmt.Sprintf("%d", counter) + `</div>
-			`))
+			`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		} else {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte(`<div>Error 404!</div>`))
+			if _, err := w.Write([]byte(`<div>Error 404!</div>`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		}
 	})
 

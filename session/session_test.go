@@ -23,10 +23,14 @@ func TestSessionBool(t *testing.T) {
 		defer sess.Close()
 		if r.URL.Path == "/set" {
 			sess.SetBool("some_bool", true)
-			w.Write([]byte(`ok`))
+			if _, err := w.Write([]byte(`ok`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		} else {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte(`404`))
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "ok" {
@@ -49,10 +53,14 @@ func TestSessionBool(t *testing.T) {
 		sess := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/get" {
-			w.Write([]byte(fmt.Sprintf("%v", sess.GetBool("some_bool", false))))
+			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.GetBool("some_bool", false)))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		} else {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte(`404`))
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "true" {
@@ -73,10 +81,14 @@ func TestSessionInt(t *testing.T) {
 		defer sess.Close()
 		if r.URL.Path == "/set" {
 			sess.SetInt("some_int", 5)
-			w.Write([]byte(`ok`))
+			if _, err := w.Write([]byte(`ok`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		} else {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte(`404`))
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "ok" {
@@ -99,10 +111,14 @@ func TestSessionInt(t *testing.T) {
 		sess := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/get" {
-			w.Write([]byte(fmt.Sprintf("%d", sess.GetInt("some_int", 0))))
+			if _, err := w.Write([]byte(fmt.Sprintf("%d", sess.GetInt("some_int", 0)))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		} else {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte(`404`))
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "5" {
@@ -123,10 +139,14 @@ func TestSessionString(t *testing.T) {
 		defer sess.Close()
 		if r.URL.Path == "/set" {
 			sess.SetString("some_str", "test")
-			w.Write([]byte(`ok`))
+			if _, err := w.Write([]byte(`ok`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		} else {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte(`404`))
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "ok" {
@@ -149,10 +169,14 @@ func TestSessionString(t *testing.T) {
 		sess := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/get" {
-			w.Write([]byte(fmt.Sprintf("%s", sess.GetString("some_str", ""))))
+			if _, err := w.Write([]byte(sess.GetString("some_str", ""))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		} else {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte(`404`))
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "test" {
@@ -192,10 +216,14 @@ func TestSessionDoNotCreateSessionFileForDefValues(t *testing.T) {
 			sess.SetBool("some_bool", false)
 			sess.SetInt("some_int", 0)
 			sess.SetString("some_str", "")
-			w.Write([]byte(`ok`))
+			if _, err := w.Write([]byte(`ok`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		} else {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte(`404`))
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "ok" {
@@ -222,15 +250,19 @@ func TestSessionDoNotCreateSessionFileForDefValues(t *testing.T) {
 		sess := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/get" {
-			w.Write([]byte(fmt.Sprintf(
+			if _, err := w.Write([]byte(fmt.Sprintf(
 				"(%v)(%v)(%v)",
 				sess.GetBool("some_bool", false),
 				sess.GetInt("some_int", 0),
 				sess.GetString("some_str", ""),
-			)))
+			))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		} else {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte(`404`))
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "(false)(0)()" {
@@ -258,10 +290,14 @@ func TestSessionDestroy(t *testing.T) {
 		defer sess.Close()
 		if r.URL.Path == "/set" {
 			sess.SetInt("some_var", 1)
-			w.Write([]byte(`ok`))
+			if _, err := w.Write([]byte(`ok`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		} else {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte(`404`))
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "ok" {
@@ -288,10 +324,14 @@ func TestSessionDestroy(t *testing.T) {
 		sess := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/get" {
-			w.Write([]byte(fmt.Sprintf("%v", sess.GetInt("some_var", 0))))
+			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.GetInt("some_var", 0)))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		} else {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte(`404`))
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "1" {
@@ -312,13 +352,19 @@ func TestSessionDestroy(t *testing.T) {
 			sess.SetInt("some_var", 2)
 			err := sess.Destroy()
 			if err == nil {
-				w.Write([]byte(`OK`))
+				if _, err := w.Write([]byte(`OK`)); err != nil {
+					fmt.Printf("%s\n", err.Error())
+				}
 			} else {
-				w.Write([]byte(`ERROR`))
+				if _, err := w.Write([]byte(`ERROR`)); err != nil {
+					fmt.Printf("%s\n", err.Error())
+				}
 			}
 		} else {
 			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte(`404`))
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "OK" {
