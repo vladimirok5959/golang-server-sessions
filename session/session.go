@@ -33,7 +33,7 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 	if err == nil && len(cookie.Value) == 40 {
 		// Load from file
 		sess.i = cookie.Value
-		fname := sess.d + string(os.PathSeparator) + sess.i
+		fname := strings.Join([]string{sess.d, sess.i}, string(os.PathSeparator))
 		f, err := os.Open(fname)
 		if err == nil {
 			defer f.Close()
@@ -91,7 +91,7 @@ func (this *Session) Close() bool {
 
 	r, err := json.Marshal(this.v)
 	if err == nil {
-		f, err := os.Create(this.d + string(os.PathSeparator) + this.i)
+		f, err := os.Create(strings.Join([]string{this.d, this.i}, string(os.PathSeparator)))
 		if err == nil {
 			defer f.Close()
 			_, err = f.Write(r)
@@ -109,7 +109,7 @@ func (this *Session) Destroy() error {
 	if this.d == "" || this.i == "" {
 		return nil
 	}
-	err := os.Remove(this.d + string(os.PathSeparator) + this.i)
+	err := os.Remove(strings.Join([]string{this.d, this.i}, string(os.PathSeparator)))
 	if err == nil {
 		this.c = false
 	}
