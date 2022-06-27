@@ -14,6 +14,7 @@ import (
 type vars struct {
 	Bool   map[string]bool
 	Int    map[string]int
+	Int64  map[string]int64
 	String map[string]string
 }
 
@@ -85,6 +86,7 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 	s.varlist = &vars{
 		Bool:   map[string]bool{},
 		Int:    map[string]int{},
+		Int64:  map[string]int64{},
 		String: map[string]string{},
 	}
 

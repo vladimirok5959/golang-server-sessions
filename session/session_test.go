@@ -126,6 +126,64 @@ func TestSessionInt(t *testing.T) {
 	}
 }
 
+func TestSessionInt64(t *testing.T) {
+	// Set value
+	request, err := http.NewRequest("GET", "/set", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Cookie", "session="+SessionId)
+	recorder := httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/set" {
+			sess.SetInt64("some_int64", 10)
+			if _, err := w.Write([]byte(`ok`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "ok" {
+		t.Fatalf("bad body response, not match")
+	}
+
+	// Remember session id
+	if SessionId == "" && len(recorder.Result().Cookies()) > 0 {
+		SessionId = recorder.Result().Cookies()[0].Value
+	}
+
+	// Get value
+	request, err = http.NewRequest("GET", "/get", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Cookie", "session="+SessionId)
+	recorder = httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/get" {
+			if _, err := w.Write([]byte(fmt.Sprintf("%d", sess.GetInt64("some_int64", 0)))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "10" {
+		t.Fatalf("bad body response, not match")
+	}
+}
+
 func TestSessionString(t *testing.T) {
 	// Set value
 	request, err := http.NewRequest("GET", "/set", nil)
@@ -193,7 +251,7 @@ func TestSessionActualFile(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if string(bytes) != `{"Bool":{"some_bool":true},"Int":{"some_int":5},"String":{"some_str":"test"}}` {
+	if string(bytes) != `{"Bool":{"some_bool":true},"Int":{"some_int":5},"Int64":{"some_int64":10},"String":{"some_str":"test"}}` {
 		t.Fatal("actual file content, not match")
 	}
 	err = os.Remove(fname)
@@ -215,6 +273,7 @@ func TestSessionDoNotCreateSessionFileForDefValues(t *testing.T) {
 		if r.URL.Path == "/set" {
 			sess.SetBool("some_bool", false)
 			sess.SetInt("some_int", 0)
+			sess.SetInt64("some_int64", 0)
 			sess.SetString("some_str", "")
 			if _, err := w.Write([]byte(`ok`)); err != nil {
 				fmt.Printf("%s\n", err.Error())
@@ -251,9 +310,10 @@ func TestSessionDoNotCreateSessionFileForDefValues(t *testing.T) {
 		defer sess.Close()
 		if r.URL.Path == "/get" {
 			if _, err := w.Write([]byte(fmt.Sprintf(
-				"(%v)(%v)(%v)",
+				"(%v)(%v)(%v)(%v)",
 				sess.GetBool("some_bool", false),
 				sess.GetInt("some_int", 0),
+				sess.GetInt64("some_int64", 0),
 				sess.GetString("some_str", ""),
 			))); err != nil {
 				fmt.Printf("%s\n", err.Error())
@@ -265,7 +325,7 @@ func TestSessionDoNotCreateSessionFileForDefValues(t *testing.T) {
 			}
 		}
 	}).ServeHTTP(recorder, request)
-	if recorder.Body.String() != "(false)(0)()" {
+	if recorder.Body.String() != "(false)(0)(0)()" {
 		t.Fatalf("bad body response, not match")
 	}
 
