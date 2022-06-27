@@ -1,4 +1,10 @@
 default: test
 
 test:
-	@go test -v ./...
+	go test ./...
+
+lint:
+	golangci-lint run
+
+tidy:
+	go mod tidy
