@@ -23,3 +23,7 @@ func (s *Session) SetInt64(name string, value int64) {
 		s.changed = true
 	}
 }
+
+func (s *Session) DelInt64(name string) {
+	delete(s.varlist.Int64, name)
+}

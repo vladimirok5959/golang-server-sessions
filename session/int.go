@@ -23,3 +23,7 @@ func (s *Session) SetInt(name string, value int) {
 		s.changed = true
 	}
 }
+
+func (s *Session) DelInt(name string) {
+	delete(s.varlist.Int, name)
+}

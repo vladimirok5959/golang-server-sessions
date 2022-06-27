@@ -23,3 +23,7 @@ func (s *Session) SetBool(name string, value bool) {
 		s.changed = true
 	}
 }
+
+func (s *Session) DelBool(name string) {
+	delete(s.varlist.Bool, name)
+}

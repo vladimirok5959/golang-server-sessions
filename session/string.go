@@ -23,3 +23,7 @@ func (s *Session) SetString(name string, value string) {
 		s.changed = true
 	}
 }
+
+func (s *Session) DelString(name string) {
+	delete(s.varlist.String, name)
+}
