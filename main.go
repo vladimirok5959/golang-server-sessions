@@ -42,7 +42,11 @@ func main() {
 	})
 
 	// Delete expired session files
-	session.Clean("./tmp")
+	if err := session.Clean("./tmp"); err != nil {
+		fmt.Printf("%s\n", err.Error())
+	}
 
-	http.ListenAndServe(":8080", nil)
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		fmt.Printf("%s\n", err.Error())
+	}
 }
