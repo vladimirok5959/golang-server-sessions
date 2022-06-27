@@ -18,22 +18,22 @@ type vars struct {
 }
 
 type Session struct {
-	w http.ResponseWriter
-	r *http.Request
-	d string
-	v *vars
-	c bool
-	i string
+	w      http.ResponseWriter
+	r      *http.Request
+	tmpdir string
+	v      *vars
+	c      bool
+	i      string
 }
 
 func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
-	sess := Session{w: w, r: r, d: tmpdir, v: &vars{}, c: false, i: ""}
+	sess := Session{w: w, r: r, tmpdir: tmpdir, v: &vars{}, c: false, i: ""}
 
 	cookie, err := r.Cookie("session")
 	if err == nil && len(cookie.Value) == 40 {
 		// Load from file
 		sess.i = cookie.Value
-		fname := strings.Join([]string{sess.d, sess.i}, string(os.PathSeparator))
+		fname := strings.Join([]string{sess.tmpdir, sess.i}, string(os.PathSeparator))
 		f, err := os.Open(fname)
 		if err == nil {
 			defer f.Close()
@@ -91,7 +91,7 @@ func (s *Session) Close() bool {
 
 	r, err := json.Marshal(s.v)
 	if err == nil {
-		f, err := os.Create(strings.Join([]string{s.d, s.i}, string(os.PathSeparator)))
+		f, err := os.Create(strings.Join([]string{s.tmpdir, s.i}, string(os.PathSeparator)))
 		if err == nil {
 			defer f.Close()
 			_, err = f.Write(r)
@@ -106,10 +106,10 @@ func (s *Session) Close() bool {
 }
 
 func (s *Session) Destroy() error {
-	if s.d == "" || s.i == "" {
+	if s.tmpdir == "" || s.i == "" {
 		return nil
 	}
-	err := os.Remove(strings.Join([]string{s.d, s.i}, string(os.PathSeparator)))
+	err := os.Remove(strings.Join([]string{s.tmpdir, s.i}, string(os.PathSeparator)))
 	if err == nil {
 		s.c = false
 	}
