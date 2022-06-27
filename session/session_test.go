@@ -555,7 +555,7 @@ func TestSessionActualFile(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if string(bytes) != `{"Bool":{"some_bool":true},"Int":{"some_int":5},"Int64":{"some_int64":10},"String":{"some_str":"test"}}` {
+	if string(bytes) != `{"Bool":{},"Int":{},"Int64":{},"String":{}}` {
 		t.Fatal("actual file content, not match")
 	}
 	err = os.Remove(fname)
