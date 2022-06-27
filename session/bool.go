@@ -20,6 +20,6 @@ func (s *Session) SetBool(name string, value bool) {
 	isset := s.IsSetBool(name)
 	s.varlist.Bool[name] = value
 	if isset || value {
-		s.c = true
+		s.changed = true
 	}
 }

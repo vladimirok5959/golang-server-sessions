@@ -20,6 +20,6 @@ func (s *Session) SetInt(name string, value int) {
 	isset := s.IsSetInt(name)
 	s.varlist.Int[name] = value
 	if isset || value != 0 {
-		s.c = true
+		s.changed = true
 	}
 }

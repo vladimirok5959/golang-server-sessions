@@ -20,6 +20,6 @@ func (s *Session) SetString(name string, value string) {
 	isset := s.IsSetString(name)
 	s.varlist.String[name] = value
 	if isset || value != "" {
-		s.c = true
+		s.changed = true
 	}
 }

@@ -22,12 +22,12 @@ type Session struct {
 	r       *http.Request
 	tmpdir  string
 	varlist *vars
-	c       bool
+	changed bool
 	i       string
 }
 
 func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
-	sess := Session{w: w, r: r, tmpdir: tmpdir, varlist: &vars{}, c: false, i: ""}
+	sess := Session{w: w, r: r, tmpdir: tmpdir, varlist: &vars{}, changed: false, i: ""}
 
 	cookie, err := r.Cookie("session")
 	if err == nil && len(cookie.Value) == 40 {
@@ -85,7 +85,7 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 }
 
 func (s *Session) Close() bool {
-	if !s.c {
+	if !s.changed {
 		return false
 	}
 
@@ -96,7 +96,7 @@ func (s *Session) Close() bool {
 			defer f.Close()
 			_, err = f.Write(r)
 			if err == nil {
-				s.c = false
+				s.changed = false
 				return true
 			}
 		}
@@ -111,7 +111,7 @@ func (s *Session) Destroy() error {
 	}
 	err := os.Remove(strings.Join([]string{s.tmpdir, s.i}, string(os.PathSeparator)))
 	if err == nil {
-		s.c = false
+		s.changed = false
 	}
 	return err
 }
