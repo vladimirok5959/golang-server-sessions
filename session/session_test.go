@@ -12,12 +12,37 @@ import (
 var SessionId string = ""
 
 func TestSessionBool(t *testing.T) {
-	// Set value
-	request, err := http.NewRequest("GET", "/set", nil)
+	// Is set (false)
+	request, err := http.NewRequest("GET", "/isset", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+	request.Header.Set("Cookie", "session="+SessionId)
 	recorder := httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/isset" {
+			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetBool("some_bool")))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "false" {
+		t.Fatalf("bad body response, not match")
+	}
+
+	// Set value
+	request, err = http.NewRequest("GET", "/set", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		sess := New(w, r, "./../tmp")
 		defer sess.Close()
@@ -66,16 +91,92 @@ func TestSessionBool(t *testing.T) {
 	if recorder.Body.String() != "true" {
 		t.Fatalf("bad body response, not match")
 	}
+
+	// Is set (true)
+	request, err = http.NewRequest("GET", "/isset", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Cookie", "session="+SessionId)
+	recorder = httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/isset" {
+			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetBool("some_bool")))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "true" {
+		t.Fatalf("bad body response, not match")
+	}
+
+	// Del
+	request, err = http.NewRequest("GET", "/del", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Cookie", "session="+SessionId)
+	recorder = httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/del" {
+			sess.DelBool("some_bool")
+			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetBool("some_bool")))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "false" {
+		t.Fatalf("bad body response, not match")
+	}
 }
 
 func TestSessionInt(t *testing.T) {
-	// Set value
-	request, err := http.NewRequest("GET", "/set", nil)
+	// Is set (false)
+	request, err := http.NewRequest("GET", "/isset", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder := httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/isset" {
+			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetInt("some_int")))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "false" {
+		t.Fatalf("bad body response, not match")
+	}
+
+	// Set value
+	request, err = http.NewRequest("GET", "/set", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Cookie", "session="+SessionId)
+	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		sess := New(w, r, "./../tmp")
 		defer sess.Close()
@@ -124,16 +225,92 @@ func TestSessionInt(t *testing.T) {
 	if recorder.Body.String() != "5" {
 		t.Fatalf("bad body response, not match")
 	}
+
+	// Is set (true)
+	request, err = http.NewRequest("GET", "/isset", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Cookie", "session="+SessionId)
+	recorder = httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/isset" {
+			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetInt("some_int")))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "true" {
+		t.Fatalf("bad body response, not match")
+	}
+
+	// Del
+	request, err = http.NewRequest("GET", "/del", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Cookie", "session="+SessionId)
+	recorder = httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/del" {
+			sess.DelInt("some_int")
+			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetInt("some_int")))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "false" {
+		t.Fatalf("bad body response, not match")
+	}
 }
 
 func TestSessionInt64(t *testing.T) {
-	// Set value
-	request, err := http.NewRequest("GET", "/set", nil)
+	// Is set (false)
+	request, err := http.NewRequest("GET", "/isset", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder := httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/isset" {
+			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetInt64("some_int64")))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "false" {
+		t.Fatalf("bad body response, not match")
+	}
+
+	// Set value
+	request, err = http.NewRequest("GET", "/set", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Cookie", "session="+SessionId)
+	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		sess := New(w, r, "./../tmp")
 		defer sess.Close()
@@ -182,16 +359,92 @@ func TestSessionInt64(t *testing.T) {
 	if recorder.Body.String() != "10" {
 		t.Fatalf("bad body response, not match")
 	}
+
+	// Is set (true)
+	request, err = http.NewRequest("GET", "/isset", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Cookie", "session="+SessionId)
+	recorder = httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/isset" {
+			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetInt64("some_int64")))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "true" {
+		t.Fatalf("bad body response, not match")
+	}
+
+	// Del
+	request, err = http.NewRequest("GET", "/del", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Cookie", "session="+SessionId)
+	recorder = httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/del" {
+			sess.DelInt64("some_int64")
+			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetInt64("some_int64")))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "false" {
+		t.Fatalf("bad body response, not match")
+	}
 }
 
 func TestSessionString(t *testing.T) {
-	// Set value
-	request, err := http.NewRequest("GET", "/set", nil)
+	// Is set (false)
+	request, err := http.NewRequest("GET", "/isset", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder := httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/isset" {
+			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetString("some_str")))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "false" {
+		t.Fatalf("bad body response, not match")
+	}
+
+	// Set value
+	request, err = http.NewRequest("GET", "/set", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Cookie", "session="+SessionId)
+	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		sess := New(w, r, "./../tmp")
 		defer sess.Close()
@@ -238,6 +491,57 @@ func TestSessionString(t *testing.T) {
 		}
 	}).ServeHTTP(recorder, request)
 	if recorder.Body.String() != "test" {
+		t.Fatalf("bad body response, not match")
+	}
+
+	// Is set (true)
+	request, err = http.NewRequest("GET", "/isset", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Cookie", "session="+SessionId)
+	recorder = httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/isset" {
+			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetString("some_str")))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "true" {
+		t.Fatalf("bad body response, not match")
+	}
+
+	// Del
+	request, err = http.NewRequest("GET", "/del", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	request.Header.Set("Cookie", "session="+SessionId)
+	recorder = httptest.NewRecorder()
+	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := New(w, r, "./../tmp")
+		defer sess.Close()
+		if r.URL.Path == "/del" {
+			sess.DelString("some_str")
+			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetString("some_str")))); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			if _, err := w.Write([]byte(`404`)); err != nil {
+				fmt.Printf("%s\n", err.Error())
+			}
+		}
+	}).ServeHTTP(recorder, request)
+	if recorder.Body.String() != "false" {
 		t.Fatalf("bad body response, not match")
 	}
 }
