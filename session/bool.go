@@ -1,5 +1,6 @@
 package session
 
+// IsSetBool to check if variable exists
 func (s *Session) IsSetBool(name string) bool {
 	if _, ok := s.varlist.Bool[name]; ok {
 		return true
@@ -8,6 +9,7 @@ func (s *Session) IsSetBool(name string) bool {
 	}
 }
 
+// GetBool returns stored variable value or default
 func (s *Session) GetBool(name string, def bool) bool {
 	if v, ok := s.varlist.Bool[name]; ok {
 		return v
@@ -16,6 +18,7 @@ func (s *Session) GetBool(name string, def bool) bool {
 	}
 }
 
+// SetBool to set variable value
 func (s *Session) SetBool(name string, value bool) {
 	isset := s.IsSetBool(name)
 	s.varlist.Bool[name] = value
@@ -24,6 +27,7 @@ func (s *Session) SetBool(name string, value bool) {
 	}
 }
 
+// DelBool to remove variable
 func (s *Session) DelBool(name string) {
 	if s.IsSetBool(name) {
 		delete(s.varlist.Bool, name)
