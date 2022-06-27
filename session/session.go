@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+// vars in memory storage for session variables
 type vars struct {
 	Bool   map[string]bool
 	Int    map[string]int
@@ -18,6 +19,7 @@ type vars struct {
 	String map[string]string
 }
 
+// Session session for managing session variables
 type Session struct {
 	w       http.ResponseWriter
 	r       *http.Request
@@ -27,6 +29,7 @@ type Session struct {
 	hash    string
 }
 
+// New to create new session
 func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 	s := Session{
 		w:       w,
@@ -93,6 +96,7 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 	return &s
 }
 
+// Close to close session and save data to local file
 func (s *Session) Close() bool {
 	if !s.changed {
 		return false
@@ -114,6 +118,7 @@ func (s *Session) Close() bool {
 	return false
 }
 
+// Destroy to remove session local file
 func (s *Session) Destroy() error {
 	if s.tmpdir == "" || s.hash == "" {
 		return nil
