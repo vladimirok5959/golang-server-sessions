@@ -84,19 +84,19 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 	return &sess
 }
 
-func (this *Session) Close() bool {
-	if !this.c {
+func (s *Session) Close() bool {
+	if !s.c {
 		return false
 	}
 
-	r, err := json.Marshal(this.v)
+	r, err := json.Marshal(s.v)
 	if err == nil {
-		f, err := os.Create(strings.Join([]string{this.d, this.i}, string(os.PathSeparator)))
+		f, err := os.Create(strings.Join([]string{s.d, s.i}, string(os.PathSeparator)))
 		if err == nil {
 			defer f.Close()
 			_, err = f.Write(r)
 			if err == nil {
-				this.c = false
+				s.c = false
 				return true
 			}
 		}
@@ -105,13 +105,13 @@ func (this *Session) Close() bool {
 	return false
 }
 
-func (this *Session) Destroy() error {
-	if this.d == "" || this.i == "" {
+func (s *Session) Destroy() error {
+	if s.d == "" || s.i == "" {
 		return nil
 	}
-	err := os.Remove(strings.Join([]string{this.d, this.i}, string(os.PathSeparator)))
+	err := os.Remove(strings.Join([]string{s.d, s.i}, string(os.PathSeparator)))
 	if err == nil {
-		this.c = false
+		s.c = false
 	}
 	return err
 }
