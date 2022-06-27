@@ -23,17 +23,17 @@ type Session struct {
 	tmpdir  string
 	varlist *vars
 	changed bool
-	i       string
+	hash    string
 }
 
 func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
-	sess := Session{w: w, r: r, tmpdir: tmpdir, varlist: &vars{}, changed: false, i: ""}
+	sess := Session{w: w, r: r, tmpdir: tmpdir, varlist: &vars{}, changed: false, hash: ""}
 
 	cookie, err := r.Cookie("session")
 	if err == nil && len(cookie.Value) == 40 {
 		// Load from file
-		sess.i = cookie.Value
-		fname := strings.Join([]string{sess.tmpdir, sess.i}, string(os.PathSeparator))
+		sess.hash = cookie.Value
+		fname := strings.Join([]string{sess.tmpdir, sess.hash}, string(os.PathSeparator))
 		f, err := os.Open(fname)
 		if err == nil {
 			defer f.Close()
@@ -63,11 +63,11 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 		}
 
 		sign := rRemoteAddr + r.Header.Get("User-Agent") + fmt.Sprintf("%d", int64(time.Now().Unix())) + fmt.Sprintf("%d", int64(rand.Intn(9999999-99)+99))
-		sess.i = fmt.Sprintf("%x", sha1.Sum([]byte(sign)))
+		sess.hash = fmt.Sprintf("%x", sha1.Sum([]byte(sign)))
 
 		http.SetCookie(w, &http.Cookie{
 			Name:     "session",
-			Value:    sess.i,
+			Value:    sess.hash,
 			Path:     "/",
 			Expires:  time.Now().Add(7 * 24 * time.Hour),
 			HttpOnly: true,
@@ -91,7 +91,7 @@ func (s *Session) Close() bool {
 
 	r, err := json.Marshal(s.varlist)
 	if err == nil {
-		f, err := os.Create(strings.Join([]string{s.tmpdir, s.i}, string(os.PathSeparator)))
+		f, err := os.Create(strings.Join([]string{s.tmpdir, s.hash}, string(os.PathSeparator)))
 		if err == nil {
 			defer f.Close()
 			_, err = f.Write(r)
@@ -106,10 +106,10 @@ func (s *Session) Close() bool {
 }
 
 func (s *Session) Destroy() error {
-	if s.tmpdir == "" || s.i == "" {
+	if s.tmpdir == "" || s.hash == "" {
 		return nil
 	}
-	err := os.Remove(strings.Join([]string{s.tmpdir, s.i}, string(os.PathSeparator)))
+	err := os.Remove(strings.Join([]string{s.tmpdir, s.hash}, string(os.PathSeparator)))
 	if err == nil {
 		s.changed = false
 	}
