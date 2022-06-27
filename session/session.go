@@ -18,16 +18,16 @@ type vars struct {
 }
 
 type Session struct {
-	w      http.ResponseWriter
-	r      *http.Request
-	tmpdir string
-	v      *vars
-	c      bool
-	i      string
+	w       http.ResponseWriter
+	r       *http.Request
+	tmpdir  string
+	varlist *vars
+	c       bool
+	i       string
 }
 
 func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
-	sess := Session{w: w, r: r, tmpdir: tmpdir, v: &vars{}, c: false, i: ""}
+	sess := Session{w: w, r: r, tmpdir: tmpdir, varlist: &vars{}, c: false, i: ""}
 
 	cookie, err := r.Cookie("session")
 	if err == nil && len(cookie.Value) == 40 {
@@ -38,7 +38,7 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 		if err == nil {
 			defer f.Close()
 			dec := json.NewDecoder(f)
-			err = dec.Decode(&sess.v)
+			err = dec.Decode(&sess.varlist)
 			if err == nil {
 				return &sess
 			}
@@ -75,7 +75,7 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 	}
 
 	// Init empty
-	sess.v = &vars{
+	sess.varlist = &vars{
 		Bool:   map[string]bool{},
 		Int:    map[string]int{},
 		String: map[string]string{},
@@ -89,7 +89,7 @@ func (s *Session) Close() bool {
 		return false
 	}
 
-	r, err := json.Marshal(s.v)
+	r, err := json.Marshal(s.varlist)
 	if err == nil {
 		f, err := os.Create(strings.Join([]string{s.tmpdir, s.i}, string(os.PathSeparator)))
 		if err == nil {

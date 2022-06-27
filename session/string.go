@@ -1,7 +1,7 @@
 package session
 
 func (s *Session) IsSetString(name string) bool {
-	if _, ok := s.v.String[name]; ok {
+	if _, ok := s.varlist.String[name]; ok {
 		return true
 	} else {
 		return false
@@ -9,7 +9,7 @@ func (s *Session) IsSetString(name string) bool {
 }
 
 func (s *Session) GetString(name string, def string) string {
-	if v, ok := s.v.String[name]; ok {
+	if v, ok := s.varlist.String[name]; ok {
 		return v
 	} else {
 		return def
@@ -18,7 +18,7 @@ func (s *Session) GetString(name string, def string) string {
 
 func (s *Session) SetString(name string, value string) {
 	isset := s.IsSetString(name)
-	s.v.String[name] = value
+	s.varlist.String[name] = value
 	if isset || value != "" {
 		s.c = true
 	}
