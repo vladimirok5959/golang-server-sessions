@@ -25,5 +25,8 @@ func (s *Session) SetInt64(name string, value int64) {
 }
 
 func (s *Session) DelInt64(name string) {
-	delete(s.varlist.Int64, name)
+	if s.IsSetInt64(name) {
+		delete(s.varlist.Int64, name)
+		s.changed = true
+	}
 }

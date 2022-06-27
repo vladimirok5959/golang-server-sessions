@@ -25,5 +25,8 @@ func (s *Session) SetBool(name string, value bool) {
 }
 
 func (s *Session) DelBool(name string) {
-	delete(s.varlist.Bool, name)
+	if s.IsSetBool(name) {
+		delete(s.varlist.Bool, name)
+		s.changed = true
+	}
 }

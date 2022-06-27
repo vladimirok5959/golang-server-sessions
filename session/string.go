@@ -25,5 +25,8 @@ func (s *Session) SetString(name string, value string) {
 }
 
 func (s *Session) DelString(name string) {
-	delete(s.varlist.String, name)
+	if s.IsSetString(name) {
+		delete(s.varlist.String, name)
+		s.changed = true
+	}
 }
