@@ -27,7 +27,14 @@ type Session struct {
 }
 
 func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
-	sess := Session{w: w, r: r, tmpdir: tmpdir, varlist: &vars{}, changed: false, hash: ""}
+	sess := Session{
+		w:       w,
+		r:       r,
+		tmpdir:  tmpdir,
+		varlist: &vars{},
+		changed: false,
+		hash:    "",
+	}
 
 	cookie, err := r.Cookie("session")
 	if err == nil && len(cookie.Value) == 40 {
