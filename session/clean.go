@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// Clean to remove all local session files which not was modified more than 24 hours
+// Clean to remove all local session files which not was used more than 24 hours
 func Clean(tmpdir string) error {
 	files, err := ioutil.ReadDir(tmpdir)
 	if err != nil {
