@@ -4,7 +4,6 @@ import (
 	"crypto/sha1"
 	"encoding/json"
 	"fmt"
-	"io/fs"
 	"math/rand"
 	"net/http"
 	"os"
@@ -52,6 +51,12 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) (*Session, error
 		// Load from file
 		s.hash = cookie.Value
 		fname := strings.Join([]string{s.tmpdir, s.hash}, string(os.PathSeparator))
+
+		info, err := os.Stat(fname)
+		if err != nil {
+			return &s, err
+		}
+
 		var f *os.File
 		f, err = os.Open(fname)
 		if err != nil {
@@ -66,13 +71,6 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) (*Session, error
 		}
 
 		// Update file last modify time
-
-		var info fs.FileInfo
-		info, err = os.Stat(fname)
-		if err != nil {
-			return &s, err
-		}
-
 		if time.Since(info.ModTime()) > 30*time.Minute {
 			if err := os.Chtimes(fname, time.Now(), time.Now()); err != nil {
 				return &s, err
