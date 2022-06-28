@@ -9,8 +9,13 @@ import (
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// Init session
-		sess := session.New(w, r, "./tmp")
+		// Create new or load saved session
+		var sess *session.Session
+		var err error
+		sess, err = session.New(w, r, "./tmp")
+		if err != nil {
+			fmt.Printf("%s\n", err.Error())
+		}
 		defer sess.Close()
 
 		if r.URL.Path == "/" {

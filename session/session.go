@@ -4,6 +4,7 @@ import (
 	"crypto/sha1"
 	"encoding/json"
 	"fmt"
+	"io/fs"
 	"math/rand"
 	"net/http"
 	"os"
@@ -29,8 +30,9 @@ type Session struct {
 	hash    string
 }
 
-// New to create new session
-func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
+// New to create new or load saved session,
+// returns error if can't load saved session
+func New(w http.ResponseWriter, r *http.Request, tmpdir string) (*Session, error) {
 	s := Session{
 		w:      w,
 		r:      r,
@@ -50,16 +52,30 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 		// Load from file
 		s.hash = cookie.Value
 		fname := strings.Join([]string{s.tmpdir, s.hash}, string(os.PathSeparator))
-		if f, err := os.Open(fname); err == nil {
-			defer f.Close()
-			dec := json.NewDecoder(f)
-			if err := dec.Decode(&s.varlist); err == nil {
-				// Update file last modify time
-				if info, err := os.Stat(fname); err == nil {
-					if time.Since(info.ModTime()) > 30*time.Minute {
-						_ = os.Chtimes(fname, time.Now(), time.Now())
-					}
-				}
+		var f *os.File
+		f, err = os.Open(fname)
+		if err != nil {
+			return &s, err
+		}
+		defer f.Close()
+
+		dec := json.NewDecoder(f)
+		err = dec.Decode(&s.varlist)
+		if err != nil {
+			return &s, err
+		}
+
+		// Update file last modify time
+
+		var info fs.FileInfo
+		info, err = os.Stat(fname)
+		if err != nil {
+			return &s, err
+		}
+
+		if time.Since(info.ModTime()) > 30*time.Minute {
+			if err := os.Chtimes(fname, time.Now(), time.Now()); err != nil {
+				return &s, err
 			}
 		}
 	} else {
@@ -86,7 +102,7 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) *Session {
 		})
 	}
 
-	return &s
+	return &s, nil
 }
 
 // Close to close session and save data to local file

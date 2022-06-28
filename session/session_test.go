@@ -20,7 +20,7 @@ func TestSessionBool(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder := httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/isset" {
 			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetBool("some_bool")))); err != nil {
@@ -44,7 +44,7 @@ func TestSessionBool(t *testing.T) {
 	}
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/set" {
 			sess.SetBool("some_bool", true)
@@ -75,7 +75,7 @@ func TestSessionBool(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/get" {
 			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.GetBool("some_bool", false)))); err != nil {
@@ -100,7 +100,7 @@ func TestSessionBool(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/isset" {
 			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetBool("some_bool")))); err != nil {
@@ -125,7 +125,7 @@ func TestSessionBool(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/del" {
 			sess.DelBool("some_bool")
@@ -153,7 +153,7 @@ func TestSessionInt(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder := httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/isset" {
 			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetInt("some_int")))); err != nil {
@@ -178,7 +178,7 @@ func TestSessionInt(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/set" {
 			sess.SetInt("some_int", 5)
@@ -209,7 +209,7 @@ func TestSessionInt(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/get" {
 			if _, err := w.Write([]byte(fmt.Sprintf("%d", sess.GetInt("some_int", 0)))); err != nil {
@@ -234,7 +234,7 @@ func TestSessionInt(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/isset" {
 			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetInt("some_int")))); err != nil {
@@ -259,7 +259,7 @@ func TestSessionInt(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/del" {
 			sess.DelInt("some_int")
@@ -287,7 +287,7 @@ func TestSessionInt64(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder := httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/isset" {
 			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetInt64("some_int64")))); err != nil {
@@ -312,7 +312,7 @@ func TestSessionInt64(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/set" {
 			sess.SetInt64("some_int64", 10)
@@ -343,7 +343,7 @@ func TestSessionInt64(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/get" {
 			if _, err := w.Write([]byte(fmt.Sprintf("%d", sess.GetInt64("some_int64", 0)))); err != nil {
@@ -368,7 +368,7 @@ func TestSessionInt64(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/isset" {
 			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetInt64("some_int64")))); err != nil {
@@ -393,7 +393,7 @@ func TestSessionInt64(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/del" {
 			sess.DelInt64("some_int64")
@@ -421,7 +421,7 @@ func TestSessionString(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder := httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/isset" {
 			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetString("some_str")))); err != nil {
@@ -446,7 +446,7 @@ func TestSessionString(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/set" {
 			sess.SetString("some_str", "test")
@@ -477,7 +477,7 @@ func TestSessionString(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/get" {
 			if _, err := w.Write([]byte(sess.GetString("some_str", ""))); err != nil {
@@ -502,7 +502,7 @@ func TestSessionString(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/isset" {
 			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.IsSetString("some_str")))); err != nil {
@@ -527,7 +527,7 @@ func TestSessionString(t *testing.T) {
 	request.Header.Set("Cookie", "session="+SessionId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/del" {
 			sess.DelString("some_str")
@@ -572,7 +572,7 @@ func TestSessionDoNotCreateSessionFileForDefValues(t *testing.T) {
 	}
 	recorder := httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/set" {
 			sess.SetBool("some_bool", false)
@@ -610,7 +610,7 @@ func TestSessionDoNotCreateSessionFileForDefValues(t *testing.T) {
 	request.Header.Set("Cookie", "session="+sessId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/get" {
 			if _, err := w.Write([]byte(fmt.Sprintf(
@@ -650,7 +650,7 @@ func TestSessionDestroy(t *testing.T) {
 	}
 	recorder := httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/set" {
 			sess.SetInt("some_var", 1)
@@ -685,7 +685,7 @@ func TestSessionDestroy(t *testing.T) {
 	request.Header.Set("Cookie", "session="+sessId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/get" {
 			if _, err := w.Write([]byte(fmt.Sprintf("%v", sess.GetInt("some_var", 0)))); err != nil {
@@ -710,7 +710,7 @@ func TestSessionDestroy(t *testing.T) {
 	request.Header.Set("Cookie", "session="+sessId)
 	recorder = httptest.NewRecorder()
 	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sess := New(w, r, "./../tmp")
+		sess, _ := New(w, r, "./../tmp")
 		defer sess.Close()
 		if r.URL.Path == "/get" {
 			sess.SetInt("some_var", 2)
