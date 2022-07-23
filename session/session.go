@@ -8,11 +8,13 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 	"time"
 )
 
 // vars in memory storage for session variables
 type vars struct {
+	sync.RWMutex
 	Bool   map[string]bool
 	Int    map[string]int
 	Int64  map[string]int64
@@ -45,6 +47,9 @@ func New(w http.ResponseWriter, r *http.Request, tmpdir string) (*Session, error
 		changed: false,
 		hash:    "",
 	}
+
+	s.varlist.Lock()
+	defer s.varlist.Unlock()
 
 	cookie, err := r.Cookie("session")
 	if err == nil && len(cookie.Value) == 40 {
@@ -108,6 +113,9 @@ func (s *Session) Close() bool {
 	if !s.changed {
 		return false
 	}
+
+	s.varlist.Lock()
+	defer s.varlist.Unlock()
 
 	r, err := json.Marshal(s.varlist)
 	if err == nil {
