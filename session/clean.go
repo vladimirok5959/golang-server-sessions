@@ -15,7 +15,7 @@ func Clean(tmpdir string) error {
 	}
 	for _, file := range files {
 		if len(file.Name()) == 40 {
-			if diff := time.Since(file.ModTime()); diff > 24*time.Hour {
+			if diff := time.Since(file.ModTime()); diff > ((24 * time.Hour) * 7) {
 				err = os.Remove(strings.Join([]string{tmpdir, file.Name()}, string(os.PathSeparator)))
 				if err != nil {
 					return err
